@@ -9,16 +9,24 @@ const apiUrl = process.argv[2];
 request(apiUrl, (error, response, body) => {
   if (error) {
     console.error(error);
-    return;
   }
 
+  // Convert the JSON object (key-value pairs) into a Javascript object
   const data = JSON.parse(body);
 
-  // Count the movies where character ID 18 is present
-  const numberOfMovies = data.results.filter((movies) =>
-    movies.characters.includes('https://swapi-api.hbtn.io/api/people/18/')
-  );
+  let numberOfMovies = 0;
 
+  // Iterate through each movie
+  data.results.forEach((movie) => {
+    // Iterate through each character in the movie
+    movie.characters.forEach((character) => {
+      // Check if the character URL includes the ID 18
+      if (character.includes('/people/18/')) {
+        // If found, increment the movie counter
+        numberOfMovies++;
+      }
+    });
+  });
   // Print the number of movies
-  console.log(numberOfMovies.length);
+  console.log(numberOfMovies);
 });
