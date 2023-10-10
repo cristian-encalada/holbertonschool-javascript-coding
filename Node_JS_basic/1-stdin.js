@@ -1,15 +1,9 @@
-console.log('Welcome to Holberton School, what is your name?');
-
-process.stdin.setEncoding('utf8'); // Ensure that the input is a string
-
-let nameReceived = false; // Ensure to process the input only once
-
-// if nameReceived = false, process the input
-
+process.stdout.write('Welcome to Holberton School, what is your name?\n');
+// 'data' event listener: waits for data input
 process.stdin.on('data', (data) => {
-  const name = data.trim(); // Remove extra newline
-  console.log(`Your name is: ${name}`);
-  console.log('This important software is now closing');
-  process.exit();
-  nameReceived = true;
+  process.stdout.write(`Your name is: ${data}`);
+});
+// 'end' event listener: writes the final message
+process.stdin.on('end', () => {
+  process.stdout.write('This important software is now closing\n');
 });
