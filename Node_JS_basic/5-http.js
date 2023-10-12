@@ -10,25 +10,25 @@ const app = http.createServer(async (req, res) => {
     res.end('Hello Holberton School!');
   } else if (parsedUrl.pathname === '/students') {
     try {
-      const databaseFile = process.argv[2] || 'database.csv'; // // Get the database file path 
+      const databaseFile = process.argv[2] || 'database.csv'; // // Get the database file path
 
-      let consoleOutput = '';  // variable to capture console.log output
+      let consoleOutput = ''; // variable to capture console.log output
       const originalConsoleLog = console.log;
       console.log = (message) => {
-        consoleOutput += message + '\n';  //  // Capture console.log output
+        consoleOutput += `${message}\n`; //  // Capture console.log output
       };
-      
+
       await countStudents(databaseFile); // Retrieve student data with countStudents() function
 
-      consoleOutput = consoleOutput.trim();  // // Remove extra newline from the end
+      consoleOutput = consoleOutput.trim(); // // Remove extra newline from the end
 
       console.log = originalConsoleLog; // // Restore the original console.log function
 
       res.end(`This is the list of our students\n${consoleOutput}`);
     } catch (error) {
       // Handle errors by sending an error response
-      res.statusCode = 500;
-      res.end('Internal Server Error\n');
+      res.statusCode = 400;
+      res.end(`This is the list of our students\n${error.message}`);
     }
   } else {
     // Handle other paths with a "Not Found" response
