@@ -1,6 +1,35 @@
 const { readDatabase } = require('../utils');
 
 class StudentsController {
+  static async getAllStudentsByMajor(req, res) {
+    // Method to check if the major parameter is valid (CS or SWE)
+    // Return the list of students in the specified major
+
+    // Use req.params to access the major from the URL path
+    const { major } = req.params;
+
+    if (!major || (major !== 'CS' && major !== 'SWE')) {
+      return res.status(500).send('Major parameter must be CS or SWE');
+    }
+
+    try {
+      const databaseFile = 'database.csv';
+
+      const students = await readDatabase(databaseFile);
+
+      if (!students || students.length === 0) {
+        return res.status(500).send('Cannot load the database');
+      }
+
+      // Filter students based on the major in a case-insensitive manner
+      const majorStudents = students.filter((student) => student.field.toLowerCase() === major.toLowerCase());
+
+      return res.status(200).send(`List: ${majorStudents.map((student) => student.firstname).join(', ')}`);
+    } catch (error) {
+      return res.status(500).send('Cannot load the database');
+    }
+  }
+
   static async getAllStudents(req, res) {
     // Method that reads the database
     // Count the number of students in each major, and sort them by major name
@@ -33,7 +62,7 @@ class StudentsController {
         const majorStudents = students.filter((student) => student.field.toLowerCase() === major);
         const firstNames = majorStudents.map((student) => student.firstname).join(', ');
         responseContent += `Number of students in ${major.toUpperCase()}: ${count}. List: ${firstNames}`;
-        
+
         if (index < sortedMajors.length - 1) {
           responseContent += '\n'; // Add newline except for the last entry
         }
@@ -42,34 +71,6 @@ class StudentsController {
       return res.status(200).send(responseContent);
     } catch (error) {
       return res.status(500).send('Cannot load the database');
-    }
-  }
-
-  static async getAllStudentsByMajor(req, res) {
-    // Method to checks if the major parameter is valid (CS or SWE)
-    // Return the list of students in the specified major
-    const { major } = req.query;
-
-    if (!major || (major !== 'CS' && major !== 'SWE')) {
-      res.status(500).send('Major parameter must be CS or SWE');
-      return;
-    }
-
-    try {
-      const databaseFile = 'database.csv';
-
-      const students = await readDatabase(databaseFile);
-
-      if (!students || students.length === 0) {
-        res.status(500).send('Cannot load the database');
-        return;
-      }
-
-      const majorStudents = students.filter((student) => student.field.toLowerCase() === major.toLowerCase());
-
-      res.status(200).send(`List: ${majorStudents.map((student) => student.firstname).join(', ')}`);
-    } catch (error) {
-      res.status(500).send('Cannot load the database');
     }
   }
 }

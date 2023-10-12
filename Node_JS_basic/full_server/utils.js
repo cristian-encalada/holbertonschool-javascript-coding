@@ -10,11 +10,11 @@ function readDatabase(filePath) {
         const headers = lines[0].split(','); // Extract headers from the first line
         const students = [];
 
-        for (let i = 1; i < lines.length; i++) {
+        for (let i = 1; i < lines.length; i += 1) {
           const values = lines[i].split(',');
           const student = {};
 
-          for (let j = 0; j < headers.length; j++) {
+          for (let j = 0; j < headers.length; j += 1) {
             student[headers[j]] = values[j];
           }
 
@@ -27,4 +27,4 @@ function readDatabase(filePath) {
   });
 }
 
-module.exports = { readDatabase }; 
+module.exports = { readDatabase };
