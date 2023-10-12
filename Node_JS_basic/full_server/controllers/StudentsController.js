@@ -5,19 +5,18 @@ class StudentsController {
     // Method that reads the database
     // Count the number of students in each major, and sort them by major name
     try {
-      const databaseFile = 'database.csv'; // You can change this to the actual path
+      const databaseFile = 'database.csv';
 
       const students = await readDatabase(databaseFile);
 
       if (!students || students.length === 0) {
-        res.status(500).send('Cannot load the database');
-        return;
+        return res.status(500).send('Cannot load the database');
       }
 
       const majorCounts = new Map();
 
       students.forEach((student) => {
-        const major = student.field.toLowerCase(); // Assuming the field is a property in the student object
+        const major = student.field.toLowerCase();
         if (majorCounts.has(major)) {
           majorCounts.set(major, majorCounts.get(major) + 1);
         } else {
@@ -25,18 +24,24 @@ class StudentsController {
         }
       });
 
-      res.status(200).send('This is the list of our students\n');
+      let responseContent = 'This is the list of our students\n';
 
       // Sort majors by name (case-insensitive)
-      for (const [major, count] of [...majorCounts.entries()].sort(([a], [b]) => a.localeCompare(b, undefined, { sensitivity: 'base' }))) {
+      const sortedMajors = [...majorCounts.entries()].sort(([a], [b]) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+      sortedMajors.forEach(([major, count], index) => {
         const majorStudents = students.filter((student) => student.field.toLowerCase() === major);
         const firstNames = majorStudents.map((student) => student.firstname).join(', ');
-        res.write(`Number of students in ${major.toUpperCase()}: ${count}. List: ${firstNames}\n`);
-      }
+        responseContent += `Number of students in ${major.toUpperCase()}: ${count}. List: ${firstNames}`;
+        
+        if (index < sortedMajors.length - 1) {
+          responseContent += '\n'; // Add newline except for the last entry
+        }
+      });
 
-      res.end();
+      return res.status(200).send(responseContent);
     } catch (error) {
-      res.status(500).send('Cannot load the database');
+      return res.status(500).send('Cannot load the database');
     }
   }
 
@@ -51,7 +56,7 @@ class StudentsController {
     }
 
     try {
-      const databaseFile = 'database.csv'; // You can change this to the actual path
+      const databaseFile = 'database.csv';
 
       const students = await readDatabase(databaseFile);
 
