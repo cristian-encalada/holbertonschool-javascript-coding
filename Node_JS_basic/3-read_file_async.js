@@ -5,12 +5,12 @@ const fs = require('fs').promises;
 // Johann,Kerbrou,30,CS
 
 // Improvement done to use the function countStudents() at task 5 -> 5-http.js
-let isServerContext = false; // flag to distinguish the server context
+// let isServerContext = false; // flag to distinguish the server context
 
 // Check if the environment variable NODE_SERVER_CONTEXT is set
-if (process.env.NODE_SERVER_CONTEXT) {
-  isServerContext = true;
-}
+// if (process.env.NODE_SERVER_CONTEXT) {
+//  isServerContext = true;
+// }
 
 async function countStudents(path) {
   try {
@@ -56,25 +56,25 @@ async function countStudents(path) {
       0, // initialize the 'total' variable
     );
 
-    let studentData = `Number of students: ${totalStudents}\n`;
-    // console.log(`Number of students: ${totalStudents}`);
+    // let studentData = `Number of students: ${totalStudents}\n`;
+    console.log(`Number of students: ${totalStudents}`);
 
     // Log the number of students in each field and their first names
     for (const field in studentCounts) {
       if (Object.prototype.hasOwnProperty.call(studentCounts, field)) {
         const count = studentCounts[field];
         const list = fieldLists[field].join(', ');
-        studentData += `Number of students in ${field}: ${count}. List: ${list}`;
-        // console.log(`Number of students in ${field}: ${count}. List: ${list}`);
+        // studentData += `Number of students in ${field}: ${count}. List: ${list}`;
+        console.log(`Number of students in ${field}: ${count}. List: ${list}`);
       }
     }
-    if (isServerContext) {
-      // If called within the server context, return the student data
-      return studentData;
-    } else {
-      // If called directly from 3-main_1.js, log the student data
-      console.log(studentData);
-    }
+    // if (isServerContext) {
+    // If called within the server context, return the student data
+    // return studentData;
+    // } else {
+    // If called directly from 3-main_1.js, log the student data
+    // console.log(studentData);
+    // }
   } catch (error) {
     // Handle errors if the file cannot be loaded
     throw new Error('Cannot load the database');
