@@ -22,9 +22,9 @@ class StudentsController {
       }
 
       // Filter students based on the major in a case-insensitive manner
-      const majorStudents = students.filter((student) => student.field.toLowerCase() === major.toLowerCase());
+      const ms = students.filter((student) => student.field.toLowerCase() === major.toLowerCase());
 
-      return res.status(200).send(`List: ${majorStudents.map((student) => student.firstname).join(', ')}`);
+      return res.status(200).send(`List: ${ms.map((student) => student.firstname).join(', ')}`);
     } catch (error) {
       return res.status(500).send('Cannot load the database');
     }
