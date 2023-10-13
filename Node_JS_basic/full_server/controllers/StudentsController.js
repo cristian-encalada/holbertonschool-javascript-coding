@@ -1,4 +1,4 @@
-const { readDatabase } = require('../utils');
+import { readDatabase } from '../utils';
 
 class StudentsController {
   static async getAllStudentsByMajor(req, res) {
@@ -13,8 +13,8 @@ class StudentsController {
     }
 
     try {
-      const databaseFile = 'database.csv';
-
+      // const databaseFile = 'database.csv';
+      const databaseFile = process.argv.length > 2 ? process.argv[2] : '';
       const students = await readDatabase(databaseFile);
 
       if (!students || students.length === 0) {
@@ -33,9 +33,8 @@ class StudentsController {
   static async getAllStudents(req, res) {
     // Method that reads the database
     // Count the number of students in each major, and sort them by major name
-    try {
-      const databaseFile = 'database.csv';
-
+    try { // const databaseFile = 'database.csv';
+      const databaseFile = process.argv.length > 2 ? process.argv[2] : '';
       const students = await readDatabase(databaseFile);
 
       if (!students || students.length === 0) {
